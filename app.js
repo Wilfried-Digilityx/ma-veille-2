@@ -12,13 +12,14 @@
 const SUPABASE_URL = 'https://ykuoszznfxuyjulfkxtr.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrdW9zenpuZnh1eWp1bGZreHRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxOTEzMjcsImV4cCI6MjA5MTc2NzMyN30.lE0Z9dyfu9NXBgWqP0QCNM3lP2opKLtIBBg0-1S_oYw';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const { createClient } = window.supabase;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /**
  * Récupère tous les liens sauvegardés depuis Supabase.
  */
 async function fetchLinks() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('links')
     .select('*')
     .order('date', { ascending: false });
@@ -31,7 +32,7 @@ async function fetchLinks() {
  * @param {{ url, title, category, notes, image, date }} data
  */
 async function insertLink(data) {
-  const { data: inserted, error } = await supabase
+  const { data: inserted, error } = await supabaseClient
     .from('links')
     .insert([data])
     .select()
@@ -45,7 +46,7 @@ async function insertLink(data) {
  * @param {number} id
  */
 async function deleteLink(id) {
-  const { error } = await supabase
+  const { error } = await supabaseClient
     .from('links')
     .delete()
     .eq('id', id);
